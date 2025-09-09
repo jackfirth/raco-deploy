@@ -1,50 +1,40 @@
 #lang racket/base
 
-(module+ test
-  (require rackunit))
 
-;; Notice
-;; To install (from within the package directory):
-;;   $ raco pkg install
-;; To install (once uploaded to pkgs.racket-lang.org):
-;;   $ raco pkg install <<name>>
-;; To uninstall:
-;;   $ raco pkg remove <<name>>
-;; To view documentation:
-;;   $ raco docs <<name>>
-;;
-;; For your convenience, we have included LICENSE-MIT and LICENSE-APACHE files.
-;; If you would prefer to use a different license, replace those files with the
-;; desired license.
-;;
-;; Some users like to add a `private/` directory, place auxiliary files there,
-;; and require them in `main.rkt`.
-;;
-;; See the current version of the racket style guide here:
-;; http://docs.racket-lang.org/style/index.html
+(require rebellion/custom-write)
 
-;; Code here
-
-
-
-(module+ test
-  ;; Any code in this `test` submodule runs when this file is run using DrRacket
-  ;; or with `raco test`. The code here does not run when this file is
-  ;; required by another module.
-
-  (check-equal? (+ 2 2) 4))
 
 (module+ main
-  ;; (Optional) main submodule. Put code here if you need it to be executed when
-  ;; this file is run using DrRacket or the `racket` executable.  The code here
-  ;; does not run when this file is required by another module. Documentation:
-  ;; http://docs.racket-lang.org/guide/Module_Syntax.html#%28part._main-and-test%29
+  (require raco/command-name
+           racket/cmdline))
 
-  (require racket/cmdline)
-  (define who (box "world"))
+
+;@----------------------------------------------------------------------------------------------------
+
+
+(struct asset (name state fetcher actuator)
+  #:omit-define-syntaxes
+  #:constructor-name constructor:asset
+  #:property prop:object-name (struct-field-index name)
+  #:property prop:custom-write (make-named-object-custom-write 'asset))
+
+
+(define (make-asset #:name name #:state state #:fetcher fetcher #:actuator actuator)
+  (constructor:asset name state fetcher actuator))
+
+
+(module+ main
   (command-line
-    #:program "my-program"
-    #:once-each
-    [("-n" "--name") name "Who to say hello to" (set-box! who name)]
+    #:program (short-program+command-name)
     #:args ()
-    (printf "hello ~a~n" (unbox who))))
+    (void)))
+
+
+(module+ deploy
+  (provide raco-deploy-package-catalog-entry)
+
+  (define raco-deploy-package-catalog-entry
+    (make-asset #:name 'raco-deploy-package-catalog-entry
+                #:state #false
+                #:fetcher (λ () #false)
+                #:actuator void)))

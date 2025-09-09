@@ -7,3 +7,8 @@
 (define version "0.0")
 (define pkg-authors '(jackfirth))
 (define license '(Apache-2.0 OR MIT))
+(define raco-commands
+  '("deploy"
+    raco-deploy
+    "deploy assets to external systems"
+    50))
