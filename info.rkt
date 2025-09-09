@@ -1,6 +1,7 @@
 #lang info
 (define collection "raco-deploy")
-(define deps '("base"))
+(define deps '("rebellion"
+               "base"))
 (define build-deps '("scribble-lib" "racket-doc" "rackunit-lib"))
 (define scribblings '(("scribblings/raco-deploy.scrbl" ())))
 (define pkg-desc "Description Here")
