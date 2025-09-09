@@ -23,6 +23,20 @@
   (constructor:asset name state fetcher actuator))
 
 
+(define (package-catalog-entry #:asset-name asset-name
+                               #:package-name package-name
+                               #:published? published?
+                               #:owner-email owner-email
+                               #:extra-author-emails [extra-authors '()]
+                               #:package-description [description ""]
+                               #:package-tags [tags '()]
+                               #:source-info package-source-info)
+  (make-asset #:name asset-name
+              #:state #false
+              #:fetcher (λ () #false)
+              #:actuator void))
+
+
 (module+ main
   (command-line
     #:program (short-program+command-name)
@@ -34,7 +48,8 @@
   (provide raco-deploy-package-catalog-entry)
 
   (define raco-deploy-package-catalog-entry
-    (make-asset #:name 'raco-deploy-package-catalog-entry
-                #:state #false
-                #:fetcher (λ () #false)
-                #:actuator void)))
+    (package-catalog-entry #:asset-name 'raco-deploy-package-catalog-entry
+                           #:package-name "raco-deploy"
+                           #:published? #false
+                           #:owner-email "jackhfirth@gmail.com"
+                           #:source-info #false)))
